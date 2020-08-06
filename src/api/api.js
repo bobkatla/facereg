@@ -45,7 +45,25 @@ async function increaseEntry(id) {
     return data;
 }
 
-export {getAllUsers, checkUser, addUser, increaseEntry};
+async function apiCall(input) {
+    const resp = await fetch(`${api}/urlimage`, {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            input
+        })
+    });
+    const data = await resp.json(); //this will return an user
+    return data;
+}
+
+export {
+    getAllUsers, 
+    checkUser, 
+    addUser, 
+    increaseEntry,
+    apiCall
+};
 /*
 understanding return in promise and async function and how to use '.then' with them
 

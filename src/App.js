@@ -9,13 +9,8 @@ import Rank from './components/Rank/Rank';
 import SignIn from './components/SignIn/SignIn';
 import Regis from './components/Regis/Regis';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
-import Clarifai from 'clarifai';
 // import {getAllUsers} from './api/api';
-import {increaseEntry} from './api/api';
-
-const app = new Clarifai.App({
-    apiKey: '30d8c08c8fa7433583467d980e8b11f0'
-});
+import {increaseEntry, apiCall} from './api/api';
 
 const pacOptions = {
   "particles": {
@@ -107,7 +102,7 @@ class App extends React.Component {
 
     onSubmit = () => {
         this.setState({imgUrl: this.state.input});
-        app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+        apiCall(this.state.input)
             .then(response => {
                 increaseEntry(this.state.user.id).then(entries => {
                     this.setState(Object.assign(this.state.user, {entries}));
