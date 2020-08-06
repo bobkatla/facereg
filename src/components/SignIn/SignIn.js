@@ -20,8 +20,10 @@ class SignIn extends React.Component {
 
     onSubmitSignIn = () => {
         checkUser(this.state.signInEmail, this.state.signInPassword)
-            .then((data) => {
-                if (data === 'success') {
+            .then(user => {
+                if (user.id) {
+                    // console.log(user)
+                    this.props.updateUser(user);
                     this.props.onChangeRoute('home');
                 }
             });

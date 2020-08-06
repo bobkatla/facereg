@@ -1,20 +1,6 @@
 import React from 'react';
 
 const Navigation = ({onChangeRoute, route}) => {
-        // if(isSignIn) {
-        //     return (
-        //         <nav style={{display: 'flex', justifyContent: 'flex-end'}}>
-        //             <p onClick={() => onChangeRoute('signIn')} className='f3 link dim black underline pa3 pointer'>Sign Out</p>
-        //         </nav>
-        //     );
-        // } else {
-        //     return (
-        //         <nav style={{display: 'flex', justifyContent: 'flex-end'}}>
-        //             <p onClick={() => onChangeRoute('signIn')} className='f3 link dim black underline pa3 pointer'>Login</p>
-        //             <p onClick={() => onChangeRoute('regis')} className='f3 link dim black underline pa3 pointer'>Registration</p>
-        //         </nav>
-        //     );
-        // }
         switch(route) {
             case 'signIn':
                 return (

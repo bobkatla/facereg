@@ -10,26 +10,8 @@ import SignIn from './components/SignIn/SignIn';
 import Regis from './components/Regis/Regis';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Clarifai from 'clarifai';
-import {getAllUsers} from './api/api';
-
-// const pacOptions = {
-//   "particles": {
-//       "number": {
-//           "value": 50
-//       },
-//       "size": {
-//           "value": 3
-//       }
-//   },
-//   "interactivity": {
-//       "events": {
-//           "onhover": {
-//               "enable": true,
-//               "mode": "repulse"
-//           }
-//       }
-//   }
-// }
+// import {getAllUsers} from './api/api';
+import {increaseEntry} from './api/api';
 
 const app = new Clarifai.App({
     apiKey: '30d8c08c8fa7433583467d980e8b11f0'
@@ -78,27 +60,31 @@ class App extends React.Component {
             imgUrl: '',
             box: [],
             route: 'signIn',
-            // isSignIn: false
+            user: {
+                id: 0,
+                name: '',
+                email: '',
+                entries: 0,
+                joined: ''
+            }
         }
     }
 
-    componentDidMount() {
-        getAllUsers().then((data) => {
-            console.log('testing api', data);
-        });
-    }
+    // componentDidMount() {
+    //     getAllUsers().then((data) => {
+    //         console.log('testing api', data);
+    //     });
+    // }
 
     onInputChange = (e) => {
         this.setState({input: e.target.value});
     }
 
     calculateFaceBox = (data) => {
-        // console.log(data);
         let result = [];
         const img = document.getElementById('inputImg');
         const width = Number(img.width);
         const height = Number(img.height);
-        // console.log(width, height);
 
         data.outputs[0].data.regions.forEach(element => {
             let claFace = element.region_info.bounding_box;
@@ -115,43 +101,57 @@ class App extends React.Component {
     }
 
     showFaceBox = (box) => {
-        // console.log(box);
         this.setState({box});
     }
 
     onSubmit = () => {
         this.setState({imgUrl: this.state.input});
         app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-            .then(response => this.showFaceBox(this.calculateFaceBox(response)))
+            .then(response => {
+                increaseEntry(this.state.user.id).then(entries => {
+                    this.setState(Object.assign(this.state.user, {entries}));
+                })
+                this.showFaceBox(this.calculateFaceBox(response))
+            })
             .catch(err => console.log(err));
     }
 
     onChangeRoute = (route) => {
-        // if(route === 'signIn'){
-        //     this.setState({isSignIn: false});
-        // } else if(route === 'home'){
-        //     this.setState({isSignIn: true});
-        // }
         this.setState({route})
     }
 
+    updateUser = (data) => {
+        this.setState({user: {
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            entries: data.entries,
+            joined: data.joined
+        }});
+    }
+
     render(){
-        const {imgUrl, box, route} = this.state;
+        const {imgUrl, box, route, user} = this.state;
         return (
             <div className='App'>
                 <Particles className='particles' params={pacOptions} />
                 <Navigation 
                     onChangeRoute={this.onChangeRoute}
                     route={route}
-                    // isSignIn={isSignIn}
                 />
                 { route === 'signIn'
-                    ? <SignIn onChangeRoute={this.onChangeRoute}/>
+                    ? <SignIn 
+                        onChangeRoute={this.onChangeRoute}
+                        updateUser={this.updateUser}
+                        />
                     : route === 'regis'
-                        ? <Regis onChangeRoute={this.onChangeRoute}/>
+                        ? <Regis 
+                            onChangeRoute={this.onChangeRoute}
+                            updateUser={this.updateUser}
+                            />
                         : <div>
                             <Logo />
-                            <Rank />
+                            <Rank user={user}/>
                             <ImageLinkForm 
                                 onInputChange={this.onInputChange} 
                                 onSubmit={this.onSubmit}

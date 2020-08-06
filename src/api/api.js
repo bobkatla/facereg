@@ -19,6 +19,33 @@ async function checkUser(email, password) {
     return dataResp;
 }
 
+async function addUser(email, password, name) {
+    const resp = await fetch(`${api}/register`, {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            email,
+            password,
+            name
+        })
+    });
+    const data = await resp.json();
+    return data;
+}
+
+async function increaseEntry(id) {
+    const resp = await fetch(`${api}/image`, {
+        method: 'put',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            id
+        })
+    });
+    const data = await resp.json(); //this will return an user
+    return data;
+}
+
+export {getAllUsers, checkUser, addUser, increaseEntry};
 /*
 understanding return in promise and async function and how to use '.then' with them
 
@@ -35,5 +62,3 @@ To think about it, fetch is returning something, that is the reason why we can a
 You can wonder why we can do it here but not outside, it is because of the 'await' keyword, and the await keyword only
 can be used inside an async function.
 */
-
-export {getAllUsers, checkUser};
