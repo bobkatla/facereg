@@ -52,22 +52,23 @@ const pacOptions = {
   }
 }
 
+const intialState = {
+    input: '',
+    imgUrl: '',
+    box: [],
+    route: 'signIn',
+    user: {
+        id: 0,
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+    }
+}
 class App extends React.Component {
     constructor() {
         super();
-        this.state = {
-            input: '',
-            imgUrl: '',
-            box: [],
-            route: 'signIn',
-            user: {
-                id: 0,
-                name: '',
-                email: '',
-                entries: 0,
-                joined: ''
-            }
-        }
+        this.state = intialState;
     }
 
     // componentDidMount() {
@@ -110,13 +111,16 @@ class App extends React.Component {
             .then(response => {
                 increaseEntry(this.state.user.id).then(entries => {
                     this.setState(Object.assign(this.state.user, {entries}));
-                })
+                }).catch(console.log)
                 this.showFaceBox(this.calculateFaceBox(response))
             })
             .catch(err => console.log(err));
     }
 
     onChangeRoute = (route) => {
+        if (route !== 'home') {
+            this.setState(intialState);
+        }
         this.setState({route})
     }
 
