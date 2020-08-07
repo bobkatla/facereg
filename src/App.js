@@ -9,7 +9,7 @@ import Rank from './components/Rank/Rank';
 import SignIn from './components/SignIn/SignIn';
 import Regis from './components/Regis/Regis';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
-// import {getAllUsers} from './api/api';
+import {getAllUsers, test} from './api/api';
 import {increaseEntry, apiCall} from './api/api';
 
 const pacOptions = {
@@ -66,11 +66,14 @@ class App extends React.Component {
         this.state = intialState;
     }
 
-    // componentDidMount() {
-    //     getAllUsers().then((data) => {
-    //         console.log('testing api', data);
-    //     });
-    // }
+    componentDidMount() {
+        getAllUsers().then(data => {
+            console.log('testing api', data);
+        });
+        test().then(data => {
+            console.log('testing cors', data)
+        })
+    }
 
     onInputChange = (e) => {
         this.setState({input: e.target.value});

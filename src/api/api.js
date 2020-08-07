@@ -1,4 +1,6 @@
-const api = 'http://localhost:5000';
+// const api = 'http://localhost:5000';
+// const proxy = 'https://cors-anywhere.herokuapp.com'
+const api = `https://agile-garden-19740.herokuapp.com`;
 
 async function getAllUsers() {
     const resp = await fetch(`${api}/`);
@@ -22,7 +24,9 @@ async function checkUser(email, password) {
 async function addUser(email, password, name) {
     const resp = await fetch(`${api}/register`, {
         method: 'post',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+            'Content-Type': 'application/json', 
+            'Access-Control-Allow-Origin': `${api}/register`},
         body: JSON.stringify({
             email,
             password,
@@ -57,12 +61,25 @@ async function apiCall(input) {
     return data;
 }
 
+async function test() {
+    const resp = await fetch(`${api}/test`, {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            something: 'this is a test to check cors'
+        })
+    });
+    const data = await resp.json(); //this will return an user
+    return data;
+}
+
 export {
     getAllUsers, 
     checkUser, 
     addUser, 
     increaseEntry,
-    apiCall
+    apiCall,
+    test
 };
 /*
 understanding return in promise and async function and how to use '.then' with them
